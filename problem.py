@@ -25,39 +25,66 @@ def get_cv(X, y):
     cv_train = KFold(n_splits=N_FOLDS, shuffle=True, random_state=0)
     return cv_train.split(X, y)
 
-def _read_data(path, dataset):
+def _read_data(path, dataset, datatype=['rois', 'vbm']):
+    """ Read data.
+
+    Parameters
+    ----------
+    path : str
+        DESCRIPTION.
+    dataset : str
+        'train' or 'test'.
+    datatype : [str, ]
+        Data set type within 'rois', 'vbm', 'vbm3d' default is ['rois', 'vbm']
+        which return a concatenation of rois and vbm data.
+
+    Returns
+    -------
+    x_arr : array (n_samples, n_features)
+        Input data.
+    y_arr : array (n_samples, )
+        target data.
+
+    """
     # Read target
     participants = pd.read_csv(os.path.join(
         path, 'data', "%s_participants.csv" % dataset))
     y_arr = participants[_target_column_name].values
 
+    x_arr_l = []
     # Read ROIs
-    rois = pd.read_csv(os.path.join(
-        path, 'data', "%s_rois.csv" % dataset))
-    x_rois_arr = rois.loc[:, 'l3thVen_GM_Vol':]
-    assert x_rois_arr.shape[1] == 284
+    if'rois' in datatype:
+        rois = pd.read_csv(os.path.join(
+            path, 'data', "%s_rois.csv" % dataset))
+        x_rois_arr = rois.loc[:, 'l3thVen_GM_Vol':]
+        assert x_rois_arr.shape[1] == 284
+        x_arr_l.append(x_rois_arr)
 
     # Read 3d images and mask
-    imgs_arr_zip = np.load(os.path.join(path, 'data', "%s_vbm.npz" % dataset))
-    x_img_arr = imgs_arr_zip['imgs_arr'].squeeze()
-    mask_arr = imgs_arr_zip['mask_arr']
-    x_img_arr = x_img_arr[:, mask_arr]
+    if'vbm' in datatype:
+        imgs_arr_zip = np.load(os.path.join(path, 'data', "%s_vbm.npz" % dataset))
+        x_img_arr = imgs_arr_zip['imgs_arr'].squeeze()
+        mask_arr = imgs_arr_zip['mask_arr']
+        x_img_arr = x_img_arr[:, mask_arr]
+        x_arr_l.append(x_img_arr)
 
-    x_arr = np.concatenate([x_rois_arr, x_img_arr], axis=1)
-    assert np.all(x_arr[:, :284] == x_rois_arr)
-    assert np.all(x_arr[:, 284:] == x_img_arr)
+    x_arr = np.concatenate(x_arr_l, axis=1)
+
+    if datatype == ['rois', 'vbm']:  # TODO: Remove this check
+        assert np.all(x_arr[:, :284] == x_rois_arr)
+        assert np.all(x_arr[:, 284:] == x_img_arr)
 
     return x_arr, y_arr
 
 
-def get_train_data(path='.'):
+def get_train_data(path='.', datatype=['rois', 'vbm']):
     dataset = 'train'
-    return _read_data(path, dataset)
+    return _read_data(path, dataset, datatype)
 
 
-def get_test_data(path='.'):
+def get_test_data(path='.', datatype=['rois', 'vbm']):
     dataset = 'test'
-    return _read_data(path, dataset)
+    return _read_data(path, dataset, datatype)
 
 # x_arr, y_arr = get_train_data()
 # x_arr, y_arr = get_test_data()
