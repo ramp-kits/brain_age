@@ -144,5 +144,5 @@ ramp-test --submission linear_regression_rois
 
 4. Submission on RAMP:
 
-[Using RAMP starting-kits]https://paris-saclay-cds.github.io/ramp-docs/ramp-workflow/stable/using_kits.html
+[Using RAMP starting-kits](https://paris-saclay-cds.github.io/ramp-docs/ramp-workflow/stable/using_kits.html)
 
