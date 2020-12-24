@@ -1,10 +1,6 @@
-import numpy as np
-
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
 from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Ridge
-from sklearn.base import BaseEstimator
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 
