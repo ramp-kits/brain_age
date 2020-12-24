@@ -129,17 +129,17 @@ Tune your model using the starting_kit
 3. Submission (Run locally)
 
 The submissions need to be located in the `submissions` folder.
-For instance for `linear_regression_rois`, it should be located in
-`submissions/submissions/linear_regression_rois`.
+For instance for `starting_kit`, it should be located in
+`submissions/submissions/starting_kit`.
 
 Copy everything required to build your estimator in a submission file:
-`submissions/submissions/linear_regression_rois/estimator.py`.
+`submissions/submissions/starting_kit/estimator.py`.
 This file must contain a function `get_estimator()`.
 
 Run locally:
 
 ```
-ramp-test --submission linear_regression_rois
+ramp-test --submission starting_kit
 ```
 
 4. Submission on RAMP:
